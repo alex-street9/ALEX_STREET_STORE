@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alex Street Store | MTA: San Andreas</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#030914;color:#fff}
+:root{--blue:#0797ff;--blue2:#0068ff;--card:#071426;--line:#0b8dff}
+a{text-decoration:none;color:inherit}
+header{position:sticky;top:0;z-index:10;background:rgba(2,8,18,.96);border-bottom:1px solid #087cff;display:flex;align-items:center;justify-content:space-between;padding:14px 5%;backdrop-filter:blur(10px)}
+.logo{font-size:26px;font-weight:900;font-style:italic;letter-spacing:-2px}.logo span{color:var(--blue)}
+nav{display:flex;gap:25px;font-weight:700;font-size:14px}nav a:hover{color:var(--blue)}
+.cart{border:1px solid #147fff;padding:9px 13px;border-radius:9px;color:#fff}.cart b{color:#20a0ff}
+.hero{min-height:470px;padding:55px 6%;display:flex;align-items:center;position:relative;overflow:hidden;background:radial-gradient(circle at 75% 40%,#073c75 0,#031124 38%,#020811 75%)}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,8,17,.96),rgba(2,8,17,.6),rgba(2,8,17,.15));pointer-events:none}
+.hero-content{position:relative;z-index:2;max-width:650px}.eyebrow{color:#32a9ff;font-weight:800;letter-spacing:2px}.hero h1{font-size:68px;line-height:.9;margin:12px 0;font-style:italic}.hero h1 span{color:#0797ff}.hero p{font-size:18px;color:#c7d7e9}.btn{display:inline-block;background:linear-gradient(90deg,#087dff,#00a6ff);padding:15px 24px;border-radius:10px;font-weight:900;margin-top:12px;box-shadow:0 0 25px #087dff55}.badge{display:inline-block;border:1px solid #158fff;color:#42b4ff;padding:7px 10px;border-radius:999px;font-size:12px;margin-right:7px}
+main{padding:55px 5%;max-width:1400px;margin:auto}.section-title{display:flex;justify-content:space-between;align-items:end;margin-bottom:24px}.section-title h2{font-size:32px;margin:0;font-style:italic}.section-title p{color:#91a7bf}.grid-cat{display:grid;grid-template-columns:repeat(8,1fr);gap:12px}.cat,.product{background:linear-gradient(180deg,#0a1b30,#061121);border:1px solid #087fff55;border-radius:12px}.cat{padding:22px 10px;text-align:center;min-height:125px}.cat .icon{font-size:30px;color:#16a0ff}.cat strong{display:block;margin-top:9px}.cat small{display:block;color:#8da4bc;margin-top:6px}
+.products{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.product{overflow:hidden}.product-img{height:155px;background:linear-gradient(135deg,#092c50,#07101d);display:flex;align-items:center;justify-content:center;font-size:54px}.product-body{padding:15px}.tag{font-size:11px;color:#2da8ff;font-weight:900}.product h3{font-size:16px;margin:8px 0}.price{font-size:19px;font-weight:900;margin:12px 0}.buy{width:100%;border:0;background:#078cff;color:#fff;padding:11px;border-radius:7px;font-weight:900;cursor:pointer}.buy:hover{background:#00a6ff}
+.benefits{margin-top:45px;display:grid;grid-template-columns:repeat(4,1fr);background:#061427;border-top:1px solid #087fff;border-bottom:1px solid #087fff}.benefit{padding:25px;border-right:1px solid #16344f}.benefit:last-child{border:0}.benefit b{display:block;color:#fff;margin-bottom:6px}.benefit span{color:#8ea7bf;font-size:13px}
+footer{padding:40px 5%;background:#020710;border-top:1px solid #087fff;display:grid;grid-template-columns:2fr 1fr 1fr;gap:35px}.footer-logo{font-size:28px;font-weight:900;font-style:italic}.footer-logo span{color:#0797ff}footer p,footer li{color:#91a7bf;font-size:14px}footer ul{padding:0;list-style:none;line-height:2}.copy{grid-column:1/-1;border-top:1px solid #18314a;padding-top:18px;text-align:center;color:#60758b;font-size:12px}
+@media(max-width:950px){nav{display:none}.grid-cat{grid-template-columns:repeat(4,1fr)}.products{grid-template-columns:repeat(2,1fr)}.benefits{grid-template-columns:repeat(2,1fr)}footer{grid-template-columns:1fr 1fr}.hero h1{font-size:52px}}
+@media(max-width:600px){header{padding:12px 4%}.logo{font-size:22px}.hero{min-height:430px;padding:45px 6%}.hero h1{font-size:44px}.hero p{font-size:15px}.grid-cat{grid-template-columns:repeat(2,1fr)}.products{grid-template-columns:1fr}.benefits{grid-template-columns:1fr}.benefit{border-right:0;border-bottom:1px solid #16344f}footer{grid-template-columns:1fr}.copy{grid-column:auto}main{padding:40px 4%}}
+
+.cart{cursor:pointer;background:#061426;border:1px solid #147fff;padding:9px 13px;border-radius:9px;color:#fff;font-weight:700}
+.modal{display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.75);align-items:center;justify-content:center;padding:18px}
+.modal.show{display:flex}.modal-box{width:min(560px,100%);max-height:90vh;overflow:auto;background:#061426;border:1px solid #168dff;border-radius:16px;box-shadow:0 0 45px #007cff55;padding:24px}
+.modal-head{display:flex;justify-content:space-between;align-items:center}.close{background:none;border:0;color:#fff;font-size:28px;cursor:pointer}
+.cart-row{display:flex;justify-content:space-between;gap:15px;padding:14px 0;border-bottom:1px solid #18314a}.cart-row small{color:#7f98b2}
+.total{display:flex;justify-content:space-between;font-size:20px;font-weight:900;padding:18px 0}
+.form input,.form select{width:100%;padding:13px;margin:7px 0 10px;background:#020b17;border:1px solid #244766;border-radius:8px;color:#fff}
+.form label{font-size:13px;color:#9ab0c7}.checkout{width:100%;padding:14px;background:#08a0ff;border:0;border-radius:8px;color:#fff;font-weight:900;cursor:pointer}
+.empty{text-align:center;padding:35px;color:#8ea7bf}
+
+.admin-btn{background:#07182b;border:1px solid #168dff;color:#fff;padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:800;margin-left:8px}
+.admin-panel{display:none;position:fixed;inset:0;z-index:80;background:#020812;overflow:auto}
+.admin-panel.show{display:block}.admin-top{position:sticky;top:0;background:#040d19;border-bottom:1px solid #087fff;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;z-index:2}
+.admin-wrap{max-width:1300px;margin:auto;padding:35px 5%}.admin-grid{display:grid;grid-template-columns:240px 1fr;gap:20px}
+.admin-nav,.admin-card{background:#071426;border:1px solid #123451;border-radius:12px}.admin-nav button{width:100%;padding:14px;background:none;border:0;border-bottom:1px solid #123451;color:#9db3c9;text-align:left;cursor:pointer}.admin-nav button.active{color:#fff;background:#0a2038}
+.admin-content{min-width:0}.admin-card{padding:20px;margin-bottom:18px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.stat strong{font-size:28px;display:block;color:#25a6ff}.admin-form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.admin-form input,.admin-form select,.admin-form textarea{width:100%;padding:12px;background:#020b17;border:1px solid #244766;border-radius:8px;color:#fff}.admin-form textarea{min-height:100px;grid-column:1/-1}.admin-form .full{grid-column:1/-1}.admin-save{background:#078cff;border:0;color:#fff;padding:12px 16px;border-radius:8px;font-weight:900;cursor:pointer}.admin-table{width:100%;border-collapse:collapse}.admin-table th,.admin-table td{padding:11px;border-bottom:1px solid #18314a;text-align:left;font-size:13px}.admin-table th{color:#63baff}.danger{color:#ff7777;background:none;border:0;cursor:pointer}
+@media(max-width:800px){.admin-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.admin-form{grid-template-columns:1fr}.admin-form textarea,.admin-form .full{grid-column:auto}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">ALEX <span>STREET</span> STORE</div>
+  <nav><a href="#">Inicio</a><a href="#catalogo">Catálogo</a><a href="#ofertas">Ofertas</a><a href="#como">Cómo Comprar</a><a href="#soporte">Soporte</a></nav>
+  <div><button class="cart" onclick="openCart()">🛒 Carrito (<b id="count">0</b>)</button><button class="admin-btn" onclick="openAdmin()">⚙ Admin</button></div>
+</header>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="eyebrow">MTA: SAN ANDREAS • RESOURCES PREMIUM</div>
+    <h1>ALEX <span>STREET</span><br>STORE</h1>
+    <p>Resources, scripts y sistemas para llevar tu servidor de MTA: San Andreas al siguiente nivel.</p>
+    <span class="badge">⚡ Entrega rápida</span><span class="badge">🛡️ Compra segura</span>
+    <br><a class="btn" href="#catalogo">VER CATÁLOGO →</a>
+  </div>
+</section>
+
+<main>
+<section>
+<div class="section-title"><div><h2>⚡ CATEGORÍAS</h2><p>Encuentra el resource perfecto para tu servidor.</p></div></div>
+<div class="grid-cat">
+<div class="cat"><div class="icon">⌘</div><strong>Scripts</strong><small>Más funcionalidad</small></div>
+<div class="cat"><div class="icon">⚙</div><strong>Sistemas</strong><small>Sistemas completos</small></div>
+<div class="cat"><div class="icon">🚘</div><strong>Vehicles</strong><small>Vehículos únicos</small></div>
+<div class="cat"><div class="icon">📍</div><strong>Maps</strong><small>Mapas personalizados</small></div>
+<div class="cat"><div class="icon">💼</div><strong>Jobs</strong><small>Trabajos y empleos</small></div>
+<div class="cat"><div class="icon">🖥</div><strong>HUD / UI</strong><small>Interfaces modernas</small></div>
+<div class="cat"><div class="icon">📦</div><strong>Packs</strong><small>Varios recursos</small></div>
+<div class="cat"><div class="icon">★</div><strong>Personalizados</strong><small>A tu medida</small></div>
+</div>
+</section>
+
+<section id="catalogo" style="margin-top:55px">
+<div class="section-title"><div><h2>🔥 PRODUCTOS DESTACADOS</h2><p>Los más vendidos y mejor valorados.</p></div></div>
+<div class="products">
+<div class="product"><div class="product-img">🔧</div><div class="product-body"><span class="tag">SISTEMAS</span><h3>Taller Mecánico Completo</h3><div class="price">RD$ 1,500</div><button class="buy" onclick="add('Taller Mecánico Completo',1500)">COMPRAR 🛒</button></div></div>
+<div class="product"><div class="product-img">🖥️</div><div class="product-body"><span class="tag">HUD / UI</span><h3>Menú Personalizado</h3><div class="price">RD$ 800</div><button class="buy" onclick="add('Menú Personalizado',800)">COMPRAR 🛒</button></div></div>
+<div class="product"><div class="product-img">🚔</div><div class="product-body"><span class="tag">VEHICLES</span><h3>Pack Vehículos Policiales</h3><div class="price">RD$ 1,200</div><button class="buy" onclick="add('Pack Vehículos Policiales',1200)">COMPRAR 🛒</button></div></div>
+<div class="product"><div class="product-img">🌆</div><div class="product-body"><span class="tag">MAPS</span><h3>Mapa Ciudad Moderna</h3><div class="price">RD$ 1,000</div><button class="buy" onclick="add('Mapa Ciudad Moderna',1000)">COMPRAR 🛒</button></div></div>
+<div class="product"><div class="product-img">👷</div><div class="product-body"><span class="tag">JOBS</span><h3>Sistema de Trabajos</h3><div class="price">RD$ 1,000</div><button class="buy" onclick="add('Sistema de Trabajos',1000)">COMPRAR 🛒</button></div></div>
+<div class="product"><div class="product-img">📊</div><div class="product-body"><span class="tag">HUD / UI</span><h3>HUD Personalizado</h3><div class="price">RD$ 700</div><button class="buy" onclick="add('HUD Personalizado',700)">COMPRAR 🛒</button></div></div>
+<div class="product"><div class="product-img">🏎️</div><div class="product-body"><span class="tag">VEHICLES</span><h3>Pack Vehículos Deportivos</h3><div class="price">RD$ 1,500</div><button class="buy" onclick="add('Pack Vehículos Deportivos',1500)">COMPRAR 🛒</button></div></div>
+<div class="product"><div class="product-img">🏠</div><div class="product-body"><span class="tag">MAPS</span><h3>Casa Moderna</h3><div class="price">RD$ 1,300</div><button class="buy" onclick="add('Casa Moderna',1300)">COMPRAR 🛒</button></div></div>
+</div>
+</section>
+</main>
+
+<div class="benefits" id="como">
+<div class="benefit">⚡ <b>ENTREGA RÁPIDA</b><span>Recibe tu resource tras el pago.</span></div>
+<div class="benefit">🛡️ <b>COMPRA SEGURA</b><span>Pagos protegidos y confiables.</span></div>
+<div class="benefit" id="soporte">🎧 <b>SOPORTE 24/7</b><span>Ayuda para tu servidor.</span></div>
+<div class="benefit">★ <b>CALIDAD GARANTIZADA</b><span>Resources probados y listos.</span></div>
+</div>
+
+
+<div class="modal" id="cartModal">
+  <div class="modal-box">
+    <div class="modal-head"><h2>🛒 Tu carrito</h2><button class="close" onclick="closeCart()">×</button></div>
+    <div id="cartItems"></div>
+    <div class="total"><span>Total</span><span id="total">RD$ 0</span></div>
+    <button class="checkout" onclick="openCheckout()">CONTINUAR AL CHECKOUT →</button>
+  </div>
+</div>
+
+<div class="modal" id="checkoutModal">
+  <div class="modal-box">
+    <div class="modal-head"><h2>💳 Finalizar compra</h2><button class="close" onclick="closeCheckout()">×</button></div>
+    <p style="color:#91a7bf">Completa tus datos. En la versión final conectaremos aquí el método de pago automático.</p>
+    <div class="form">
+      <label>Nombre</label><input id="customerName" placeholder="Tu nombre">
+      <label>Correo electrónico</label><input id="customerEmail" type="email" placeholder="correo@ejemplo.com">
+      <label>Método de pago</label>
+      <select id="payment"><option>Transferencia bancaria</option><option>PayPal</option><option>Tarjeta de crédito/débito</option></select>
+      <button class="checkout" onclick="sendOrder()">SOLICITAR PEDIDO POR WHATSAPP</button>
+    </div>
+  </div>
+</div>
+<footer>
+<div><div class="footer-logo">ALEX <span>STREET</span> STORE</div><p>Resources premium para MTA: San Andreas.</p></div>
+<div><h3>CONTÁCTANOS</h3><p>WhatsApp: +1 829-902-1683</p><p>Discord: Alex Street Store</p></div>
+<div><h3>MÉTODOS DE PAGO</h3><p>Transferencia bancaria</p><p>PayPal</p><p>Tarjeta de crédito/débito</p></div>
+<div class="copy">© 2026 Alex Street Store. Todos los derechos reservados.</div>
+</footer>
+
+<script>
+const defaultProducts=[
+{name:"Taller Mecánico Completo",category:"Sistemas",price:1500,icon:"🔧",desc:"Sistema completo para talleres."},
+{name:"Menú Personalizado",category:"HUD / UI",price:800,icon:"🖥️",desc:"Interfaz moderna para tu servidor."},
+{name:"Pack Vehículos Policiales",category:"Vehicles",price:1200,icon:"🚔",desc:"Pack de vehículos policiales."},
+{name:"Mapa Ciudad Moderna",category:"Maps",price:1000,icon:"🌆",desc:"Mapa urbano personalizado."},
+{name:"Sistema de Trabajos",category:"Jobs",price:1000,icon:"👷",desc:"Sistema de trabajos."},
+{name:"HUD Personalizado",category:"HUD / UI",price:700,icon:"📊",desc:"HUD limpio y moderno."},
+{name:"Pack Vehículos Deportivos",category:"Vehicles",price:1500,icon:"🏎️",desc:"Pack de vehículos deportivos."},
+{name:"Casa Moderna",category:"Maps",price:1300,icon:"🏠",desc:"Casa moderna para tu servidor."}
+];
+let products=JSON.parse(localStorage.getItem("alexStreetProducts")||"null")||defaultProducts;
+let cartItems=[];
+
+function money(n){return 'RD$ '+Number(n).toLocaleString('es-DO')}
+function saveProducts(){localStorage.setItem("alexStreetProducts",JSON.stringify(products))}
+function add(name,price){const found=cartItems.find(x=>x.name===name);if(found)found.qty++;else cartItems.push({name,price,qty:1});renderCart();openCart()}
+function renderCart(){
+ const count=cartItems.reduce((s,x)=>s+x.qty,0);document.getElementById('count').textContent=count;
+ const box=document.getElementById('cartItems');
+ box.innerHTML=cartItems.length?cartItems.map((x,i)=>`<div class="cart-row"><div><strong>${x.name}</strong><br><small>${x.qty} × ${money(x.price)}</small></div><div><strong>${money(x.price*x.qty)}</strong><br><button onclick="removeItem(${i})" style="background:none;border:0;color:#36aaff;cursor:pointer">Quitar</button></div></div>`).join(''):'<div class="empty">Tu carrito está vacío.</div>';
+ document.getElementById('total').textContent=money(cartItems.reduce((s,x)=>s+x.price*x.qty,0));
+}
+function removeItem(i){cartItems.splice(i,1);renderCart()}
+function openCart(){document.getElementById('cartModal').classList.add('show');renderCart()}
+function closeCart(){document.getElementById('cartModal').classList.remove('show')}
+function openCheckout(){if(!cartItems.length){alert('Agrega al menos un producto al carrito.');return}closeCart();document.getElementById('checkoutModal').classList.add('show')}
+function closeCheckout(){document.getElementById('checkoutModal').classList.remove('show')}
+function sendOrder(){
+ const name=document.getElementById('customerName').value.trim(),email=document.getElementById('customerEmail').value.trim(),payment=document.getElementById('payment').value;
+ if(!name||!email){alert('Completa tu nombre y correo.');return}
+ const lines=cartItems.map(x=>`• ${x.name} x${x.qty} - ${money(x.price*x.qty)}`).join('%0A'),total=cartItems.reduce((s,x)=>s+x.price*x.qty,0);
+ window.open('https://wa.me/18299021683?text='+`Hola Alex Street Store.%0A%0AQuiero realizar este pedido:%0A${lines}%0A%0ATotal: ${money(total)}%0ANombre: ${encodeURIComponent(name)}%0ACorreo: ${encodeURIComponent(email)}%0AMétodo: ${encodeURIComponent(payment)}`,'_blank')
+}
+function renderStore(){
+ const grid=document.querySelector('.products');
+ grid.innerHTML=products.map(x=>`<div class="product"><div class="product-img">${x.icon}</div><div class="product-body"><span class="tag">${x.category.toUpperCase()}</span><h3>${x.name}</h3><p style="color:#8da4bc;font-size:12px">${x.desc}</p><div class="price">${money(x.price)}</div><button class="buy" onclick="add(${JSON.stringify(x.name)},${x.price})">COMPRAR 🛒</button></div></div>`).join('');
+ document.getElementById('adminProducts').textContent=products.length;
+}
+function renderAdmin(){
+ document.getElementById('adminRows').innerHTML=products.map((x,i)=>`<tr><td>${x.icon} ${x.name}</td><td>${x.category}</td><td>${money(x.price)}</td><td><button class="danger" onclick="deleteAdminProduct(${i})">Eliminar</button></td></tr>`).join('');
+}
+function addAdminProduct(){
+ const name=document.getElementById('newName').value.trim(),price=Number(document.getElementById('newPrice').value),category=document.getElementById('newCategory').value,icon=document.getElementById('newIcon').value.trim()||'📦',desc=document.getElementById('newDesc').value.trim()||'Resource premium para MTA:SA.';
+ if(!name||!price){alert('Pon nombre y precio.');return}
+ products.push({name,price,category,icon,desc});saveProducts();renderStore();renderAdmin();
+ ['newName','newPrice','newIcon','newDesc'].forEach(id=>document.getElementById(id).value='');
+ alert('Resource agregado al catálogo.')
+}
+function deleteAdminProduct(i){if(confirm('¿Eliminar este producto?')){products.splice(i,1);saveProducts();renderStore();renderAdmin()}}
+function openAdmin(){document.getElementById('adminPanel').classList.add('show');renderAdmin()}
+function closeAdmin(){document.getElementById('adminPanel').classList.remove('show')}
+renderStore();renderCart();
+</script>
+
+
+<div class="admin-panel" id="adminPanel">
+  <div class="admin-top">
+    <div class="logo">ALEX <span>STREET</span> STORE — ADMIN</div>
+    <button class="admin-btn" onclick="closeAdmin()">← Volver a la tienda</button>
+  </div>
+  <div class="admin-wrap">
+    <div class="admin-grid">
+      <aside class="admin-nav">
+        <button class="active">📊 Dashboard</button>
+        <button>📦 Productos</button>
+        <button>🧾 Pedidos</button>
+        <button>💰 Ventas</button>
+        <button>⚙ Configuración</button>
+      </aside>
+      <section class="admin-content">
+        <div class="stats">
+          <div class="admin-card stat"><span>Productos</span><strong id="adminProducts">8</strong></div>
+          <div class="admin-card stat"><span>Pedidos</span><strong>0</strong></div>
+          <div class="admin-card stat"><span>Ventas</span><strong>RD$ 0</strong></div>
+        </div>
+
+        <div class="admin-card">
+          <h2>➕ Agregar resource</h2>
+          <p style="color:#91a7bf">Prototipo local: los productos se guardan en este navegador.</p>
+          <div class="admin-form">
+            <input id="newName" placeholder="Nombre del resource">
+            <input id="newPrice" type="number" placeholder="Precio en RD$">
+            <select id="newCategory">
+              <option>Scripts</option><option>Sistemas</option><option>Vehicles</option><option>Maps</option>
+              <option>Jobs</option><option>HUD / UI</option><option>Packs</option><option>Personalizados</option>
+            </select>
+            <input id="newIcon" placeholder="Emoji / icono (ej. 🚗)">
+            <textarea id="newDesc" placeholder="Descripción del resource"></textarea>
+            <button class="admin-save full" onclick="addAdminProduct()">GUARDAR RESOURCE</button>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h2>📦 Catálogo</h2>
+          <div style="overflow:auto">
+            <table class="admin-table">
+              <thead><tr><th>Producto</th><th>Categoría</th><th>Precio</th><th>Acción</th></tr></thead>
+              <tbody id="adminRows"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</body>
+</html>
